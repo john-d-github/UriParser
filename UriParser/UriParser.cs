@@ -39,7 +39,7 @@ namespace UriParser
             var cond = fCalcCondition_(c);
             var nextState = finalState_;
             int condIndex = 0;
-            for( int i = 1; i <= cond.Length; ++i )
+            for( int i = 1; i < cond.Length; ++i )
             {
                 if (transition_[currState_, i] != 0 && cond[i] == 1)
                 {
@@ -60,9 +60,42 @@ namespace UriParser
         }
     }
 
-    /**
-    **/
-    
+    // beginState and endState are dummy states - endState represents the max enum value + 1
+    // used to size an array of states
+
+    enum States
+    {
+        beginState = 0,
+        initial = 1,
+        scheme = 2,
+        slash1 = 3,
+        slash2 = 4,
+        path = 5,
+        query = 6,
+        fragment = 7,
+        final = 8,
+        hostgroup = 9,
+        lhs = 10,
+        rhs = 11,
+        host = 12,
+        port = 13,
+        error1 = 14,
+        error2 = 15,
+        endState = 16
+    }
+
+    // No longer used
+    struct CondState
+    {
+        public int cond;
+        public States state;
+        public CondState( int cond, States state )
+        {
+            this.cond = cond;
+            this.state = state;
+        }
+    }
+
     // Parse a URI into its components
     public class UriParser
     {
@@ -76,7 +109,11 @@ namespace UriParser
         public string Path;
         public string Query;
         public string Fragment;
+        public string Error;
  
+        // Some of these conditions are overlapping
+        // Ensure that a given state does not use overlapping conditions
+
         private int[] fCalcCondition(char c)
         {
             var condition = new int[15];
@@ -97,27 +134,40 @@ namespace UriParser
             return condition;
         }
 
+        // The transition matrix[state,condition] represents for each state & condition, what the next state is
+        // A value of 0 means that the condition is not applicable for that state
+
+        private void SetCond( int[,] t, States s, int[,] condState )
+        {
+            for (int i = 0; i < condState.GetLength(0); ++i)
+                t[(int)s, condState[i,0]] = condState[i,1];
+        }
+
         public UriParser()
         {
-            var t = new int[16,15];     // default initilized to 0
-            t[1, 11] = 2; t[1, 12] = 8;
-            t[2, 1] = 3; t[2, 2] = 2; t[2, 12] = 8;
-            t[3, 3] = 4; t[3, 4] = 5; t[3, 12] = 8;
-            t[4, 3] = 9; t[4, 4] = 5; t[4, 12] = 8;
-            t[5, 5] = 6; t[5, 6] = 5; t[5, 7] = 7; t[5, 12] = 8;
-            t[6, 7] = 7; t[6, 8] = 6; t[6, 12] = 8;
-            t[7, 8] = 7; t[7, 12] = 8;
-            t[9, 3] = 5; t[9, 4] = 10; t[9, 12] = 8;
-            t[10, 1] = 11; t[10, 3] = 5; t[10, 5] = 6; t[10, 9] = 14; t[10, 10] = 10; t[10, 12] = 8;
-            t[11, 1] = 15; t[11, 3] = 5; t[11, 5] = 6; t[11, 9] = 12; t[11, 10] = 11; t[11, 12] = 8;
-            t[12, 1] = 13; t[12, 3] = 5; t[12, 13] = 12; ; t[12, 5] = 6; t[12, 12] = 8;
-            t[13, 3] = 5; t[13, 3] = 5; t[13, 14] = 13; t[13, 5] = 6; t[13, 12] = 8;
-            t[14, 0] = 8;
-            t[15, 0] = 8;
+            var t = new int[(int)States.endState,15];     // default initilized to 0
 
-            var stateValue = new string[16];
+            // (int)enum has a bit of a code smell. You could wrap (int,enum) pairs in a struct & pass an array of that struct. 
+            // But this obscures the information you're trying to make clearer with `new struct(int,enum)` clutter.
+ 
+            SetCond(t, States.initial, new int[,] { {11, (int)States.scheme }, { 12, (int)States.final} } );
+            SetCond(t, States.scheme, new int[,] { {1, (int)States.slash1}, {2, (int)States.scheme}, {12, (int)States.final} });
+            SetCond(t, States.slash1, new int[,] { { 3, (int)States.slash2 }, { 4, (int)States.path }, { 12, (int)States.final } });
+            SetCond(t, States.slash2, new int[,] { { 3, (int)States.hostgroup }, { 4, (int)States.path }, { 12, (int)States.final } });
+            SetCond(t, States.path, new int[,] { { 5, (int)States.query }, { 6, (int)States.path }, { 7, (int)States.fragment }, { 12, (int)States.final } });
+            SetCond(t, States.query, new int[,] { { 7, (int)States.fragment }, { 8, (int)States.query }, { 12, (int)States.final } });
+            SetCond(t, States.fragment, new int[,] { { 8, (int)States.fragment }, { 12, (int)States.final } });
+            SetCond(t, States.hostgroup, new int[,] { { 3, (int)States.path }, { 4, (int)States.lhs }, { 12, (int)States.final } });
+            SetCond(t, States.lhs, new int[,] { { 1, (int)States.rhs }, { 3, (int)States.path }, { 5, (int)States.query }, { 9, (int)States.error1 }, { 10, (int)States.lhs }, { 12, (int)States.final } });
+            SetCond(t, States.rhs, new int[,] { { 1, (int)States.error2 }, { 3, (int)States.path }, { 5, (int)States.query }, { 9, (int)States.host }, { 10, (int)States.rhs }, { 12, (int)States.final } });
+            SetCond(t, States.host, new int[,] { { 1, (int)States.port }, { 3, (int)States.path }, { 5, (int)States.query }, { 13, (int)States.host }, { 12, (int)States.final } });
+            SetCond(t, States.port, new int[,] { { 1, (int)States.error2 }, { 3, (int)States.path }, { 5, (int)States.query }, { 14, (int)States.port }, { 12, (int)States.final } });
+            SetCond(t, States.error1, new int[,] { { 11, (int)States.error1 }, { 12, (int)States.final } });
+            SetCond(t, States.error2, new int[,] { { 11, (int)States.error2 }, { 12, (int)States.final } });
 
-            fsm_ = new Fsm(t, 1, 8, fCalcCondition, stateValue);
+            var stateValue = new string[t.GetLength(0)];
+
+            fsm_ = new Fsm(t, (int)States.initial, (int)States.final, fCalcCondition, stateValue);
         }
 
         public void Parse(string uri)
@@ -127,12 +177,12 @@ namespace UriParser
             {
                 fsm_.NextState(c);
             }
-            fsm_.NextState('\0');
+            fsm_.NextState('\0');           // Use '\0' as flag to signal EOS
 
-            Scheme = fsm_.StateValue(2);
-            Host = fsm_.StateValue(12);
-            string lhs = fsm_.StateValue(10);
-            string rhs = fsm_.StateValue(11);
+            Scheme = fsm_.StateValue((int)States.scheme);
+            Host = fsm_.StateValue((int)States.host);
+            string lhs = fsm_.StateValue((int)States.lhs);
+            string rhs = fsm_.StateValue((int)States.rhs);
             if (Host == "")
             {
                 Host = lhs;
@@ -142,14 +192,14 @@ namespace UriParser
             }
             else
             {
-                Port = fsm_.StateValue(13);
+                Port = fsm_.StateValue((int)States.port);
                 User = lhs;
                 Password = rhs;
             }
-            Path = fsm_.StateValue(5);
-            Query = fsm_.StateValue(6);
-            Fragment = fsm_.StateValue(7);
- 
+            Path = fsm_.StateValue((int)States.path);
+            Query = fsm_.StateValue((int)States.query);
+            Fragment = fsm_.StateValue((int)States.fragment);
+            Error = fsm_.StateValue((int)States.error1) + " " + fsm_.StateValue((int)States.error2);
         }
     }
 }

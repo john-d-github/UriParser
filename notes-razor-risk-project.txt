@@ -12,7 +12,7 @@ Project definition
 	·         What aspects of software quality – such as Discoverability, Modularity, Efficiency, Testability, and so forth – you capture in your work, and at what stages;
 	·         How you use source control;
 
-	 Our expectation is that this task should take not less than two and not more than ten hours cumulative work.
+	Our expectation is that this task should take not less than two and not more than ten hours cumulative work.
 
 	The specification:
 	
@@ -33,7 +33,8 @@ Create a new git repo from an existing project
     Create .gitignore file. Use `git add .gitignore`, too.
     `git config user.email "jsdalzell@gmail.com"`
     `git config user.name "John Dalzell"`
-    Type `git commit . -m "Initial working draft"`
+    `git commit . -m "Initial working draft"`
+
 
 Discoverability = (in relation to online content) the quality of being easy to find via a search engine, within an application, or on a website.
 "a good way to gauge your discoverability is to type your name into Google"
@@ -42,6 +43,11 @@ http://synesis.com.au/publishing/xstl/xstlv1_prologue.pdf
 Wilson, Matthew - Extended STL vol 1 (2007) p xxvii
 Definition: Discoverability is how easy it is to understand a component in order to be able to use it.
 Definition: Transparency is how easy it is to understand a component in order to be able to modify it.
+
+
+URI defined in RFC 3986 Jan 2005.
+scheme : [ // [ user : password @ ] host [ : port ] ] [ / ] path [ ? query ] [ # fragment ]
+Can be empty string - see RFC 3986 (2005) Section 4.1
 
 
 class URI {
@@ -108,7 +114,7 @@ Sub-matrix for hostgroup
 We need rules about what tokens to consume and what to ignore
 / @ : are ignored, the rest are consumed into next state.
 
-Planning & research - 3 hours
+Planning & research - 2 hours
 Initial build - 2 hours
 Debugging first draft - 2 hours
 
@@ -122,6 +128,16 @@ Debugging first draft - 2 hours
 	http:/path/path2?query#frag not distinguishing betw relative & absolute path
 		whether you have leading / or not, still get same value
 		Path = path/path2
+		
+Debugging 2nd draft - 2 hours
+
+	http://www.google.com:1234:5678 should give error
+		Host = www.google.com12345678
+		Port = :
+	Sol`n: Typo in transition matrix
+	
+	States error1 & error2 need to transition to themselves if notEOS
+	
 
 TODO
 

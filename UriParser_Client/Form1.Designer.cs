@@ -47,6 +47,9 @@
             this.txtQuery = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
             this.txtFragment = new System.Windows.Forms.TextBox();
+            this.label10 = new System.Windows.Forms.Label();
+            this.txtError = new System.Windows.Forms.TextBox();
+            this.cmdTestCases = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -95,7 +98,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(13, 91);
+            this.label3.Location = new System.Drawing.Point(262, 68);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(53, 13);
             this.label3.TabIndex = 0;
@@ -103,7 +106,7 @@
             // 
             // txtPassword
             // 
-            this.txtPassword.Location = new System.Drawing.Point(76, 88);
+            this.txtPassword.Location = new System.Drawing.Point(325, 65);
             this.txtPassword.Name = "txtPassword";
             this.txtPassword.Size = new System.Drawing.Size(166, 20);
             this.txtPassword.TabIndex = 1;
@@ -127,7 +130,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(13, 117);
+            this.label5.Location = new System.Drawing.Point(13, 91);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(29, 13);
             this.label5.TabIndex = 0;
@@ -135,7 +138,7 @@
             // 
             // txtHost
             // 
-            this.txtHost.Location = new System.Drawing.Point(76, 114);
+            this.txtHost.Location = new System.Drawing.Point(76, 88);
             this.txtHost.Name = "txtHost";
             this.txtHost.Size = new System.Drawing.Size(166, 20);
             this.txtHost.TabIndex = 1;
@@ -143,7 +146,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(13, 169);
+            this.label6.Location = new System.Drawing.Point(13, 117);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(29, 13);
             this.label6.TabIndex = 0;
@@ -151,15 +154,15 @@
             // 
             // txtPath
             // 
-            this.txtPath.Location = new System.Drawing.Point(76, 166);
+            this.txtPath.Location = new System.Drawing.Point(76, 114);
             this.txtPath.Name = "txtPath";
-            this.txtPath.Size = new System.Drawing.Size(166, 20);
+            this.txtPath.Size = new System.Drawing.Size(415, 20);
             this.txtPath.TabIndex = 1;
             // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(13, 143);
+            this.label7.Location = new System.Drawing.Point(262, 94);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(26, 13);
             this.label7.TabIndex = 0;
@@ -167,7 +170,7 @@
             // 
             // txtPort
             // 
-            this.txtPort.Location = new System.Drawing.Point(76, 140);
+            this.txtPort.Location = new System.Drawing.Point(325, 91);
             this.txtPort.Name = "txtPort";
             this.txtPort.Size = new System.Drawing.Size(166, 20);
             this.txtPort.TabIndex = 1;
@@ -175,7 +178,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(13, 195);
+            this.label8.Location = new System.Drawing.Point(13, 143);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(35, 13);
             this.label8.TabIndex = 0;
@@ -183,7 +186,7 @@
             // 
             // txtQuery
             // 
-            this.txtQuery.Location = new System.Drawing.Point(76, 192);
+            this.txtQuery.Location = new System.Drawing.Point(76, 140);
             this.txtQuery.Name = "txtQuery";
             this.txtQuery.Size = new System.Drawing.Size(166, 20);
             this.txtQuery.TabIndex = 1;
@@ -191,7 +194,7 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(13, 221);
+            this.label9.Location = new System.Drawing.Point(13, 169);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(51, 13);
             this.label9.TabIndex = 0;
@@ -199,21 +202,50 @@
             // 
             // txtFragment
             // 
-            this.txtFragment.Location = new System.Drawing.Point(76, 218);
+            this.txtFragment.Location = new System.Drawing.Point(76, 166);
             this.txtFragment.Name = "txtFragment";
             this.txtFragment.Size = new System.Drawing.Size(166, 20);
             this.txtFragment.TabIndex = 1;
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(13, 195);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(29, 13);
+            this.label10.TabIndex = 0;
+            this.label10.Text = "Error";
+            // 
+            // txtError
+            // 
+            this.txtError.Location = new System.Drawing.Point(76, 192);
+            this.txtError.Name = "txtError";
+            this.txtError.Size = new System.Drawing.Size(598, 20);
+            this.txtError.TabIndex = 1;
+            // 
+            // cmdTestCases
+            // 
+            this.cmdTestCases.Location = new System.Drawing.Point(704, 53);
+            this.cmdTestCases.Name = "cmdTestCases";
+            this.cmdTestCases.Size = new System.Drawing.Size(91, 25);
+            this.cmdTestCases.TabIndex = 3;
+            this.cmdTestCases.Text = "Run test cases";
+            this.cmdTestCases.UseVisualStyleBackColor = true;
+            this.cmdTestCases.Click += new System.EventHandler(this.cmdTestCases_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(842, 355);
+            this.Controls.Add(this.cmdTestCases);
             this.Controls.Add(this.btnUriParse);
             this.Controls.Add(this.txtUser);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.txtPort);
             this.Controls.Add(this.label7);
+            this.Controls.Add(this.txtError);
+            this.Controls.Add(this.label10);
             this.Controls.Add(this.txtFragment);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.txtQuery);
@@ -256,6 +288,9 @@
         private System.Windows.Forms.TextBox txtQuery;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.TextBox txtFragment;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.TextBox txtError;
+        private System.Windows.Forms.Button cmdTestCases;
     }
 }
 
