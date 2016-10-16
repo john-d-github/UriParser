@@ -1,0 +1,131 @@
+==================
+Razor Risk project
+==================
+
+Project definition
+
+	The purpose:
+	
+	This test is intended to provide some reflection on the following:
+
+	·         How you go about design and development of a relatively small, isolated component;
+	·         What aspects of software quality – such as Discoverability, Modularity, Efficiency, Testability, and so forth – you capture in your work, and at what stages;
+	·         How you use source control;
+
+	 Our expectation is that this task should take not less than two and not more than ten hours cumulative work.
+
+	The specification:
+	
+	You are requested to create a component, written in a language of your choice (though it must be one of C++, C#, Go, Java, Python, Ruby), that performs URI parsing, recording its evolution in a Git repository that you will create and email back (in archive form) for our perusal.
+	The parser component should be able to identify all of the recognised components of a well-formed URI – scheme, user, password, host, port, path, query, fragment – and provide them to the caller in the form of a suitable abstraction.
+	The parser component should communicate adequately to the caller upon receipt of malformed input.
+	According to current requirements, the parser will not represent a performance bottleneck within the systems in which it will be used. As such, you are not required to focus your design and development efforts on exacting highest-possible performance above other aspects of quality. If you wish to comment on how your implementation and design might be adjusted to have higher runtime performance should the requirements change, that would be of interest to us.
+	Given the problem-domain, a Test Driven Development (TDD) approach is recommended, but not required. Should you choose to follow a TDD-approach, the suite of tests may be deemed to be the component’s documentation.
+	Whether or not you use TDD, each meaningful step of your work should be recorded in the repository.
+	Please provide links to any reference material to which you refer.
+
+ 
+Create a new git repo from an existing project
+
+    Go into the directory containing the project.
+    `git init .`
+    `git add` to add all of the relevant files.
+    Create .gitignore file. Use `git add .gitignore`, too.
+    `git config user.email "jsdalzell@gmail.com"`
+    `git config user.name "John Dalzell"`
+    Type `git commit . -m "Initial working draft"`
+
+Discoverability = (in relation to online content) the quality of being easy to find via a search engine, within an application, or on a website.
+"a good way to gauge your discoverability is to type your name into Google"
+
+http://synesis.com.au/publishing/xstl/xstlv1_prologue.pdf
+Wilson, Matthew - Extended STL vol 1 (2007) p xxvii
+Definition: Discoverability is how easy it is to understand a component in order to be able to use it.
+Definition: Transparency is how easy it is to understand a component in order to be able to modify it.
+
+
+class URI {
+	string Scheme;
+	string User; 
+	string Password;
+	string Host; 
+	string Port; 
+	string Path; 
+	string Query; 
+	string Fragment;
+};
+    
+    
+https://msdn.microsoft.com/en-us/library/aa287601(v=vs.71).aspx
+
+	// Single-dimensional array (numbers).
+	int[] n1 = new int[4] {2, 4, 6, 8};
+	int[] n2 = new int[] {2, 4, 6, 8};
+	int[] n3 = {2, 4, 6, 8};
+	
+	// Single-dimensional array (strings).
+	string[] s1 = new string[3] {"John", "Paul", "Mary"};
+	string[] s2 = new string[] {"John", "Paul", "Mary"};
+	string[] s3 = {"John", "Paul", "Mary"};
+
+	// Multidimensional array.
+	int[,] n4 = new int[3, 2] { {1, 2}, {3, 4}, {5, 6} };
+	int[,] n5 = new int[,] { {1, 2}, {3, 4}, {5, 6} };
+	int[,] n6 = { {1, 2}, {3, 4}, {5, 6} };
+
+	// Jagged array.
+	int[][] n7 = new int[2][] { new int[] {2,4,6}, new int[] {1,3,5,7,9} };
+	int[][] n8 = new int[][] { new int[] {2,4,6}, new int[] {1,3,5,7,9} };
+	int[][] n9 = { new int[] {2,4,6}, new int[] {1,3,5,7,9} };
+
+
+FSM transition matrix
+
+				:		not:	/			not/	?		not?	#			not#		EOS		notEOS
+	initial																					final	scheme
+	scheme		slash1	scheme																final
+	slash1						slash2		path											final
+	slash2						hostgroup	path											final
+	path											query	path							final
+	query															fragment	query		final
+	fragment																	fragment	final
+	final
+
+Sub-matrix for hostgroup
+
+				not/		:		@		/		not@:/		not:	EOS
+	hostgroup	lhs							path						final
+	lhs						rhs		error1	path	lhs					final
+	rhs						error2	host	path	rhs					final
+	host					port								host	final		
+	port		port						path						final
+	error1
+	error2
+	
+	Note: If host has a value, lhs = user, rhs = password
+	Else, lhs = host, rhs = port
+
+We need rules about what tokens to consume and what to ignore
+/ @ : are ignored, the rest are consumed into next state.
+
+Planning & research - 3 hours
+Initial build - 2 hours
+Debugging first draft - 2 hours
+
+	Chgs to the FSM were easier than I thought
+	Put the transition matrix in Excel spreadsheet
+
+	http://user:pass@www.google.com/path:1234?id=1#frag=2 not separating host & path 
+		Host = @www.google.com/path
+	http://user:pass@www.google.com:1234/path/path2#frag not picking up fragment
+		Path = /path/path2#frag
+	http:/path/path2?query#frag not distinguishing betw relative & absolute path
+		whether you have leading / or not, still get same value
+		Path = path/path2
+
+TODO
+
+	Need to strip leading chars like : / ? #
+		Sol`n: Add extra state to consume the leading char & jump straight to capture the state
+
+	Chg literal indexing to enum's

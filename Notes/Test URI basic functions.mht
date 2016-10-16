@@ -1,0 +1,398 @@
+From: <Saved by UnMHT Ver.8.2.0>
+Subject: Test URI basic functions
+Date: Sun, 16 Oct 2016 17:32:19 +1100
+MIME-Version: 1.0
+X-UnMHT-Save-State: Current-State
+Content-Type: multipart/related;
+	boundary="----=_Part_4DA0B0FB_B3B246E7.157CC30E914";
+	type="text/html"
+
+------=_Part_4DA0B0FB_B3B246E7.157CC30E914
+Content-Location: http://dig.csail.mit.edu/2005/ajar/ajaw/test/uri-test-doc.html
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/html;
+	charset="UTF-8"
+
+<html><head><meta http-equiv=3D"Content-Type" content=3D"text/html; charset=
+=3DUTF-8">
+    <title>Test URI basic functions</title>
+    <script src=3D"../js/uri.js"></script>
+    <script src=3D"uri-test.js"></script>
+<base href=3D"http://dig.csail.mit.edu/2005/ajar/ajaw/test/"></head>
+
+<body onload=3D"document.getElementById(&#x27;foo&#x27;).innerHTML=3Dtest()=
+">
+<h1 id=3D"header">URI function tests</h1>
+
+<p id=3D"foo"><table><tbody><tr><th>Base</th><th>Absolute</th><th>Relative<=
+/th><th>join(rel, base)</th><th>refTo(base, abs)</th></tr>
+<tr><td>foo:xyz</td><td>bar:abc</td><td>bar:abc</td><td>bar:abc</td><td>bar=
+:abc</td></tr>
+<tr><td>http://example/x/y/z</td><td>http://example/x/abc</td><td>../abc</t=
+d><td>http://example/x/abc</td><td>../abc</td></tr>
+<tr><td>http://example2/x/y/z</td><td>http://example/x/abc</td><td>http://e=
+xample/x/abc</td><td>http://example/x/abc</td><td>http://example/x/abc</td>=
+</tr>
+<tr><td>http://ex/x/y/z</td><td>http://ex/x/r</td><td>../r</td><td>http://e=
+x/x/r</td><td>../r</td></tr>
+<tr><td>http://ex/x/y</td><td>http://ex/x/q/r</td><td>q/r</td><td>http://ex=
+/x/q/r</td><td>q/r</td></tr>
+<tr><td>http://ex/x/y</td><td>http://ex/x/q/r#s</td><td>q/r#s</td><td>http:=
+//ex/x/q/r#s</td><td>q/r#s</td></tr>
+<tr><td>http://ex/x/y</td><td>http://ex/x/q/r#s/t</td><td>q/r#s/t</td><td>h=
+ttp://ex/x/q/r#s/t</td><td>q/r#s/t</td></tr>
+<tr><td>http://ex/x/y</td><td>ftp://ex/x/q/r</td><td>ftp://ex/x/q/r</td><td=
+>ftp://ex/x/q/r</td><td>ftp://ex/x/q/r</td></tr>
+<tr><td>http://ex/x/y</td><td>http://ex/x/y</td><td></td><td>http://ex/x/y<=
+/td><td></td></tr>
+<tr><td>http://ex/x/y/</td><td>http://ex/x/y/</td><td></td><td>http://ex/x/=
+y/</td><td></td></tr>
+<tr><td>http://ex/x/y/pdq</td><td>http://ex/x/y/pdq</td><td></td><td>http:/=
+/ex/x/y/pdq</td><td></td></tr>
+<tr><td>http://ex/x/y/</td><td>http://ex/x/y/z/</td><td>z/</td><td>http://e=
+x/x/y/z/</td><td>z/</td></tr>
+<tr><td>file:/swap/test/animal.rdf</td><td>file:/swap/test/animal.rdf#Anima=
+l</td><td>#Animal</td><td>file:/swap/test/animal.rdf#Animal</td><td>#Animal=
+</td></tr>
+<tr><td>file:/e/x/y/z</td><td>file:/e/x/abc</td><td>../abc</td><td>file:/e/=
+x/abc</td><td>../abc</td></tr>
+<tr><td>file:/example2/x/y/z</td><td>file:/example/x/abc</td><td>/example/x=
+/abc</td><td>file:/example/x/abc</td><td>/example/x/abc</td></tr>
+<tr><td>file:/ex/x/y/z</td><td>file:/ex/x/r</td><td>../r</td><td>file:/ex/x=
+/r</td><td>../r</td></tr>
+<tr><td>file:/ex/x/y/z</td><td>file:/r</td><td>/r</td><td>file:/r</td><td>/=
+r</td></tr>
+<tr><td>file:/ex/x/y</td><td>file:/ex/x/q/r</td><td>q/r</td><td>file:/ex/x/=
+q/r</td><td>q/r</td></tr>
+<tr><td>file:/ex/x/y</td><td>file:/ex/x/q/r#s</td><td>q/r#s</td><td>file:/e=
+x/x/q/r#s</td><td>q/r#s</td></tr>
+<tr><td>file:/ex/x/y</td><td>file:/ex/x/q/r#</td><td>q/r#</td><td>file:/ex/=
+x/q/r#</td><td>q/r#</td></tr>
+<tr><td>file:/ex/x/y</td><td>file:/ex/x/q/r#s/t</td><td>q/r#s/t</td><td>fil=
+e:/ex/x/q/r#s/t</td><td>q/r#s/t</td></tr>
+<tr><td>file:/ex/x/y</td><td>ftp://ex/x/q/r</td><td>ftp://ex/x/q/r</td><td>=
+ftp://ex/x/q/r</td><td>ftp://ex/x/q/r</td></tr>
+<tr><td>file:/ex/x/y</td><td>file:/ex/x/y</td><td></td><td>file:/ex/x/y</td=
+><td></td></tr>
+<tr><td>file:/ex/x/y/</td><td>file:/ex/x/y/</td><td></td><td>file:/ex/x/y/<=
+/td><td></td></tr>
+<tr><td>file:/ex/x/y/pdq</td><td>file:/ex/x/y/pdq</td><td></td><td>file:/ex=
+/x/y/pdq</td><td></td></tr>
+<tr><td>file:/ex/x/y/</td><td>file:/ex/x/y/z/</td><td>z/</td><td>file:/ex/x=
+/y/z/</td><td>z/</td></tr>
+<tr><td>file:/devel/WWW/2000/10/swap/test/reluri-1.n3</td><td>file://meetin=
+gs.example.com/cal#m1</td><td>file://meetings.example.com/cal#m1</td><td>fi=
+le://meetings.example.com/cal#m1</td><td>file://meetings.example.com/cal#m1=
+</td></tr>
+<tr><td>file:/home/connolly/w3ccvs/WWW/2000/10/swap/test/reluri-1.n3</td><t=
+d>file://meetings.example.com/cal#m1</td><td>file://meetings.example.com/ca=
+l#m1</td><td>file://meetings.example.com/cal#m1</td><td>file://meetings.exa=
+mple.com/cal#m1</td></tr>
+<tr><td>file:/some/dir/foo</td><td>file:/some/dir/#blort</td><td>./#blort</=
+td><td>file:/some/dir/#blort</td><td>./#blort</td></tr>
+<tr><td>file:/some/dir/foo</td><td>file:/some/dir/#</td><td>./#</td><td>fil=
+e:/some/dir/#</td><td>./#</td></tr>
+<tr><td>http://example/x/y%2Fz</td><td>http://example/x/abc</td><td>abc</td=
+><td>http://example/x/abc</td><td>abc</td></tr>
+<tr><td>http://example/x/y/z</td><td>http://example/x%2Fabc</td><td>/x%2Fab=
+c</td><td>http://example/x%2Fabc</td><td>/x%2Fabc</td></tr>
+<tr><td>http://example/x/y%2Fz</td><td>http://example/x%2Fabc</td><td>/x%2F=
+abc</td><td>http://example/x%2Fabc</td><td>/x%2Fabc</td></tr>
+<tr><td>http://example/x%2Fy/z</td><td>http://example/x%2Fy/abc</td><td>abc=
+</td><td>http://example/x%2Fy/abc</td><td>abc</td></tr>
+<tr><td>http://example/x/abc.efg</td><td>http://example/x/</td><td>./</td><=
+td>http://example/x/</td><td>./</td></tr>
+<tr><td>http://www.w3.org/People/Berners-Lee/card.rdf</td><td>http://www.w3=
+.org/2002/01/tr-automation/tr.rdf</td><td>../../2002/01/tr-automation/tr.rd=
+f</td><td>http://www.w3.org/2002/01/tr-automation/tr.rdf</td><td style=3D"b=
+ackground-color: #ffd">/2002/01/tr-automation/tr.rdf</td></tr>
+<tr><td>http://example.com/</td><td>http://example.com/</td><td>.</td><td>h=
+ttp://example.com/</td><td style=3D"background-color: #ffd"></td></tr>
+<tr><td>http://example.com/.meta.n3</td><td>http://example.com/.meta.n3</td=
+><td>.meta.n3</td><td>http://example.com/.meta.n3</td><td style=3D"backgrou=
+nd-color: #ffd"></td></tr>
+</tbody></table>
+</p>
+
+
+</body></html>
+------=_Part_4DA0B0FB_B3B246E7.157CC30E914
+Content-Location: http://dig.csail.mit.edu/2005/ajar/ajaw/js/uri.js
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/javascript
+
+//  Implementing URI-specific functions
+//
+//	See RFC 2386
+//
+// This is or was   http://www.w3.org/2005/10/ajaw/uri.js
+// 2005 W3C open source licence
+//
+//
+//  Take a URI given in relative or absolute form and a base
+//  URI, and return an absolute URI
+//
+//  See also http://www.w3.org/2000/10/swap/uripath.py
+//
+
+if (typeof Util =3D=3D "undefined") { Util =3D {}}
+if (typeof Util.uri =3D=3D "undefined") { Util.uri =3D {}}
+
+Util.uri.join =3D function (given, base) {
+    // if (typeof tabulator.log.debug !=3D 'undefined') tabulator.log.debug=
+("   URI given=3D"+given+" base=3D"+base)
+    var baseHash =3D base.indexOf('#')
+    if (baseHash > 0) base =3D base.slice(0, baseHash)
+    if (given.length=3D=3D0) return base // before chopping its filename off
+    if (given.indexOf('#')=3D=3D0) return base + given
+    var colon =3D given.indexOf(':')
+    if (colon >=3D 0) return given	// Absolute URI form overrides base URI
+    var baseColon =3D base.indexOf(':')
+    if (base =3D=3D "") return given;
+    if (baseColon < 0) {
+        alert("Invalid base: "+ base + ' in join with ' +given);
+        return given
+    }
+    var baseScheme =3D base.slice(0,baseColon+1)  // eg http:
+    if (given.indexOf("//") =3D=3D 0)     // Starts with //
+	return baseScheme + given;
+    if (base.indexOf('//', baseColon)=3D=3DbaseColon+1) {  // Any hostpart?
+	    var baseSingle =3D base.indexOf("/", baseColon+3)
+	if (baseSingle < 0) {
+	    if (base.length-baseColon-3 > 0) {
+		return base + "/" + given
+	    } else {
+		return baseScheme + given
+	    }
+	}
+    } else {
+	var baseSingle =3D base.indexOf("/", baseColon+1)
+	if (baseSingle < 0) {
+	    if (base.length-baseColon-1 > 0) {
+		return base + "/" + given
+	    } else {
+		return baseScheme + given
+	    }
+	}
+    }
+
+    if (given.indexOf('/') =3D=3D 0)	// starts with / but not //
+	return base.slice(0, baseSingle) + given
+   =20
+    var path =3D base.slice(baseSingle)
+    var lastSlash =3D path.lastIndexOf("/")
+    if (lastSlash <0) return baseScheme + given
+    if ((lastSlash >=3D0) && (lastSlash < (path.length-1)))
+	path =3D path.slice(0, lastSlash+1) // Chop trailing filename from base
+   =20
+    path =3D path + given
+    while (path.match(/[^\/]*\/\.\.\//)) // must apply to result of prev
+	path =3D path.replace( /[^\/]*\/\.\.\//, '') // ECMAscript spec 7.8.5
+    path =3D path.replace( /\.\//g, '') // spec vague on escaping
+    path =3D path.replace( /\/\.$/, '/' )
+    return base.slice(0, baseSingle) + path
+}
+
+var tIOService;
+if (typeof( isExtension ) !=3D "undefined" && isExtension) {
+    tIOService =3D Components.classes['@mozilla.org/network/io-service;1']
+                        .getService(Components.interfaces.nsIIOService);
+    Util.uri.join2 =3D function (given, base){
+       var baseURI =3D tIOService.newURI(base, null, null);
+       return tIOService.newURI(baseURI.resolve(given), null, null).spec;
+    }
+} else
+    Util.uri.join2 =3D Util.uri.join;
+   =20
+//  refTo:    Make a URI relative to a given base
+//
+// based on code in http://www.w3.org/2000/10/swap/uripath.py
+//
+Util.uri.commonHost =3D new RegExp("^[-_a-zA-Z0-9.]+:(//[^/]*)?/[^/]*$");
+Util.uri.refTo =3D function(base, uri) {
+    if (!base) return uri;
+    if (base =3D=3D uri) return "";
+    var i =3D0; // How much are they identical?
+    while (i<uri.length && i < base.length)
+        if (uri[i] =3D=3D base[i]) i++;
+        else break;
+    if (base.slice(0,i).match(Util.uri.commonHost)) {
+        var k =3D uri.indexOf('//');
+        if (k<0) k=3D-2; // no host
+        var l =3D uri.indexOf('/', k+2);   // First *single* slash
+        if (uri.slice(l+1, l+2) !=3D '/' && base.slice(l+1, l+2) !=3D '/'
+                           && uri.slice(0,l) =3D=3D base.slice(0,l)) // com=
+mon path to single slash
+            return uri.slice(l); // but no other common path segments
+    }
+     // fragment of base?
+    if (uri.slice(i, i+1) =3D=3D '#' && base.length =3D=3D i) return uri.sl=
+ice(i);
+    while (i>0 && uri[i-1] !=3D '/') i--;
+
+    if (i<3) return uri; // No way
+    if ((base.indexOf('//', i-2) > 0) || uri.indexOf('//', i-2) > 0)
+        return uri; // an unshared '//'
+    if (base.indexOf(':', i) >0) return uri; // unshared ':'
+    var n =3D 0;
+    for (var j=3Di; j<base.length; j++) if (base[j]=3D=3D'/') n++;
+    if (n=3D=3D0 && i < uri.length && uri[i] =3D=3D'#') return './' + uri.s=
+lice(i);
+    if (n=3D=3D0 && i =3D=3D uri.length) return './';
+    var str =3D '';
+    for (var j=3D0; j<n; j++) str+=3D '../';
+    return str + uri.slice(i);
+}
+
+
+/** returns URI without the frag **/
+Util.uri.docpart =3D function (uri) {
+    var i =3D uri.indexOf("#")
+    if (i < 0) return uri
+    return uri.slice(0,i)
+}=20
+
+/** return the protocol of a uri **/
+/** return null if there isn't one **/
+Util.uri.protocol =3D function (uri) {
+    var index =3D uri.indexOf(':');
+    if (index >=3D 0)
+        return uri.slice(0, index);
+    else
+        return null;
+} //protocol
+
+URIjoin =3D Util.uri.join
+uri_docpart =3D Util.uri.docpart
+uri_protocol =3D Util.uri.protocol
+
+
+//ends
+
+------=_Part_4DA0B0FB_B3B246E7.157CC30E914
+Content-Location: http://dig.csail.mit.edu/2005/ajar/ajaw/test/uri-test.js
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/javascript
+
+//  Testing URI-specific functions
+//
+//	See RFC 2386
+//
+// This is or was   http://www.w3.org/2005/10/ajaw/rdf/uri.js
+// 2005 W3C open source licence
+//
+//
+//  Take a URI given in relative or absolute form and a base
+//  URI, and return an absolute URI
+//
+//  See also http://www.w3.org/2000/10/swap/uripath.py
+//
+
+
+function testCanon() {
+    var canonCases =3D [
+	[ "http://example.com/foo bar", 'http://example.com/foo%20bar'],
+	[ 'fran%c3%83%c2%a7ois' , 'fran%C3%83%C2%A7ois'  ],
+	[ 'a', 'a' ],
+	[ '%4e' , 'N' ],
+	[  '%9d', '%9D' ],
+	[  '%2f', '%2F'  ],
+	[  '%2F', '%2F' ],
+    ];
+
+}
+
+function test() {
+    var testCases =3D [["foo:xyz", "bar:abc", "bar:abc"],
+                 ['http://example/x/y/z', 'http://example/x/abc', '../abc'],
+                 ['http://example2/x/y/z', 'http://example/x/abc', 'http://=
+example/x/abc'],
+                 ['http://ex/x/y/z', 'http://ex/x/r', '../r'],
+                 //             ['http://ex/x/y/z', 'http://ex/r', '../../r=
+'],    // DanC had this.
+                 ['http://ex/x/y', 'http://ex/x/q/r', 'q/r'],
+                 ['http://ex/x/y', 'http://ex/x/q/r#s', 'q/r#s'],
+                 ['http://ex/x/y', 'http://ex/x/q/r#s/t', 'q/r#s/t'],
+                 ['http://ex/x/y', 'ftp://ex/x/q/r', 'ftp://ex/x/q/r'],
+                 ['http://ex/x/y', 'http://ex/x/y', ''],
+                 ['http://ex/x/y/', 'http://ex/x/y/', ''],
+                 ['http://ex/x/y/pdq', 'http://ex/x/y/pdq', ''],
+                 ['http://ex/x/y/', 'http://ex/x/y/z/', 'z/'],
+                 ['file:/swap/test/animal.rdf', 'file:/swap/test/animal.rdf=
+#Animal', '#Animal'],
+                 ['file:/e/x/y/z', 'file:/e/x/abc', '../abc'],
+                 ['file:/example2/x/y/z', 'file:/example/x/abc', '/example/=
+x/abc'],  // TBL
+                 ['file:/ex/x/y/z', 'file:/ex/x/r', '../r'],
+                 ['file:/ex/x/y/z', 'file:/r', '/r'],        // I prefer th=
+is. - tbl
+                 ['file:/ex/x/y', 'file:/ex/x/q/r', 'q/r'],
+                 ['file:/ex/x/y', 'file:/ex/x/q/r#s', 'q/r#s'],
+                 ['file:/ex/x/y', 'file:/ex/x/q/r#', 'q/r#'],
+                 ['file:/ex/x/y', 'file:/ex/x/q/r#s/t', 'q/r#s/t'],
+                 ['file:/ex/x/y', 'ftp://ex/x/q/r', 'ftp://ex/x/q/r'],
+                 ['file:/ex/x/y', 'file:/ex/x/y', ''],
+                 ['file:/ex/x/y/', 'file:/ex/x/y/', ''],
+                 ['file:/ex/x/y/pdq', 'file:/ex/x/y/pdq', ''],
+                 ['file:/ex/x/y/', 'file:/ex/x/y/z/', 'z/'],
+                 ['file:/devel/WWW/2000/10/swap/test/reluri-1.n3',=20
+                  'file://meetings.example.com/cal#m1',
+		   'file://meetings.example.com/cal#m1'],
+                 ['file:/home/connolly/w3ccvs/WWW/2000/10/swap/test/reluri-=
+1.n3',=20
+		    'file://meetings.example.com/cal#m1',=20
+		    'file://meetings.example.com/cal#m1'],
+                 ['file:/some/dir/foo', 'file:/some/dir/#blort', './#blort'=
+],
+                 ['file:/some/dir/foo', 'file:/some/dir/#', './#'],
+
+                 // From Graham Klyne Thu, 20 Feb 2003 18:08:17 +0000
+                 ["http://example/x/y%2Fz", "http://example/x/abc", "abc"],
+                 ["http://example/x/y/z", "http://example/x%2Fabc", "/x%2Fa=
+bc"],
+                 ["http://example/x/y%2Fz", "http://example/x%2Fabc", "/x%2=
+Fabc"],
+                 ["http://example/x%2Fy/z", "http://example/x%2Fy/abc", "ab=
+c"],
+                 // Ryan Lee
+                 ["http://example/x/abc.efg", "http://example/x/", "./"],
+                 // Tim BL 2005-11-28  A version of the uri.js URIjoin() fa=
+iled:
+                 ['http://www.w3.org/People/Berners-Lee/card.rdf',
+                  'http://www.w3.org/2002/01/tr-automation/tr.rdf',
+                  '../../2002/01/tr-automation/tr.rdf'],
+                 ["http://example.com/", "http://example.com/", "."],
+                 ["http://example.com/.meta.n3", "http://example.com/.meta.=
+n3", ".meta.n3"]
+                 ]
+    var n =3D testCases.length
+    var i
+    var str =3D "<table><tr><th>Base</th><th>Absolute</th><th>Relative</th>"
+		+ "<th>join(rel, base)</th><th>refTo(base, abs)</th></tr>\n"
+	=09
+    for(i=3D0; i<n; i++) {
+	var c =3D testCases[i]
+	var base =3D c[0]
+	var abs =3D c[1]
+	var rel =3D c[2]
+	var abs2 =3D Util.uri.join(rel, base)
+	style =3D ""
+	if (abs2 !=3D abs) {
+//	    alert("URI join test failed: join("+base+", "+rel+") should be "+
+//			abs +", was "+ abs2)
+	    style =3D 'style=3D"color: red"'
+	}
+        var rel2 =3D Util.uri.refTo(base, abs);
+        style2 =3D  (rel2 =3D=3D rel) ? '' : (
+            (Util.uri.join(rel2, base) =3D=3Dabs) ? 'style=3D"background-co=
+lor: #ffd"' : 'style=3D"background-color: #fdd"');=20
+	str+=3D ("<tr><td>"+ base +"</td><td>"+ abs +"</td><td>"+ rel +
+	    "</td><td "+style+">"+abs2+"</td><td "+style2+">"+rel2+"</td></tr>\n")
+    }
+    return str + "</table>\n"
+} // test
+
+
+//ends
+
+------=_Part_4DA0B0FB_B3B246E7.157CC30E914--
