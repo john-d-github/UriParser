@@ -45,11 +45,12 @@ Definition: Discoverability is how easy it is to understand a component in order
 Definition: Transparency is how easy it is to understand a component in order to be able to modify it.
 
 
-URI defined in RFC 3986 Jan 2005.
-scheme : [ // [ user : password @ ] host [ : port ] ] [ / ] path [ ? query ] [ # fragment ]
-Can be empty string - see RFC 3986 (2005) Section 4.1
+URI defined in RFC 3986 (Jan 2005).
+	scheme : [ // [ user : password @ ] host [ : port ] ] [ / ] path [ ? query ] [ # fragment ]
+	Can be empty string - see RFC 3986 (2005) Section 4.1
+	Example of IPv6 host: "file://[fe80::203:baff:fe5a:749d%1]/Documents/file"
 
-
+	
 class URI {
 	string Scheme;
 	string User; 
@@ -85,7 +86,7 @@ https://msdn.microsoft.com/en-us/library/aa287601(v=vs.71).aspx
 	int[][] n9 = { new int[] {2,4,6}, new int[] {1,3,5,7,9} };
 
 
-FSM transition matrix
+FSM transition matrix - initial draft
 
 				:		not:	/			not/	?		not?	#			not#		EOS		notEOS
 	initial																					final	scheme
@@ -97,7 +98,7 @@ FSM transition matrix
 	fragment																	fragment	final
 	final
 
-Sub-matrix for hostgroup
+	Sub-matrix for hostgroup
 
 				not/		:		@		/		not@:/		not:	EOS
 	hostgroup	lhs							path						final
@@ -128,20 +129,65 @@ Debugging first draft - 2 hours
 	http:/path/path2?query#frag not distinguishing betw relative & absolute path
 		whether you have leading / or not, still get same value
 		Path = path/path2
-		
+
+
 Debugging 2nd draft - 2 hours
+Change the indexing of transition matrix etc from literals to enum's.
+Although tedious, this did improve readability a lot.
 
 	http://www.google.com:1234:5678 should give error
 		Host = www.google.com12345678
 		Port = :
 	Sol`n: Typo in transition matrix
 	
-	States error1 & error2 need to transition to themselves if notEOS
+	States error1 & error2 not picking up all of the input after a parse error.
+	Sol`n: Need to transition to themselves if notEOS
+
+
+Introducing test case file 'uri-test-cases.txt' & validating against it - 3 hours
+
+	Looks like state not being cleared properly as some state-values have extraneous text at the end
+	Sol`n: Was appending the dummy EOS character '\0'.
 	
+	Not distinguishing between absolute path '/path' and relative path 'path' in some cases.
+	Eg between `foo:xyz` and `foo:/xyz` ??
+	Sol`n: Use internal state variable slash2 - if it captured a '/' and Host is blank, then we can assume absolute path & prepend '/' to Path 
+	
+	Should disregard trailing spaces as not semantically significant, but they trigger mismatch to expected result of test cases
+	Action: For Path, trim trailing space and '/'
+	
+	Not stripping leading chars like : / ? #
+	Sol`n: Add extra states to consume the leading char & jump straight to capture the "true" state
+	I.e. pathTok, queryTok, fragTok, hostTok, rhsTok, portTok
+	
+	Not handling empty password in `ftp://anonymous:@public.server.com:22/public/data/file.txt`
+	Sol`n: Need to capture the '@' in `rhsTok` state as well as in `rhs` state.
+	
+	'http://user@host/path?query' jumps to error state, but the rest of the properties are parsed oddly.
 
-TODO
+	'Error' field in uri-test-cases.txt' is being read in to the instance UriTestCase, but is not printed out in ToString().
+	Seems to have disappeared by the time we call .ToString(). I just see "Error=" with no value.
+	Sol`n: A bit embarrassing - the error message was actually on the previous record, not the record which mismatched!
+	
+	Make the properties in UriParser publicly readable but only writeable from within the class.
+	Sol`n: `public string Scheme { get; private set; }` etc
+	
+	Error message returned from UriParser has no explanation - it just dumps the input URI from the point where parsing failed.
+	Tarted up the error message UriParser returns to provide an explanation - the error state variables just capture input from where parse failed.
+	
+	Scheme is required but it accepts "www.google.com" - it places this in Scheme.
+	Sol`n: Check `slash1` state - did it capture a ':'? If not, raise an error.
 
-	Need to strip leading chars like : / ? #
-		Sol`n: Add extra state to consume the leading char & jump straight to capture the state
+	
+SUMMARY
 
-	Chg literal indexing to enum's
+	It was an interesting project. I wanted to try out a Finite State Machine (FSM) for this and it worked well I think.
+	As shortcomings appeared, there were a few modifications that needed to be made to it and it was relatively easy to change.
+	I approached testing in the way I'm used to - a suite of test cases which are applied end-to-end, rather than unit testing.
+	The UriParser C# class library is called by the C# Windows Forms application UriParser_Client (the test harness).
+	Tests can be via a set of test-cases or by entering a specific URI and parsing that.
+	
+	I spent a bit over the maximum 10 hours cumulative work, so I thought I better submit this now, even though there's a lot more I'd like to do with it.
+	See "Razor Risk FSM.xls" for the 2 versions of the state transition matrix, and for the test cases.
+	I copy-pasted the test cases into "UriParser_Client/uri-test-cases.txt" for ease of input.
+	

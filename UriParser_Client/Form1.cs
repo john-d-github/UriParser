@@ -34,7 +34,7 @@ namespace UriParser_Client
             txtError.Text = uriParser.Error;
         }
 
-    // Parse a URI into its components
+        // Parse a URI into its components
         private class UriTestCase
         {
             public string UriString;
@@ -48,23 +48,40 @@ namespace UriParser_Client
             public string Fragment;
             public string Error;
 
-            public string ToString()
+            public override string ToString()
             {
-                return (String.Format("UriString={0} Scheme={1} User={2} Password={3} Host={4) Port={5} Path={6} Query={7} Fragment={8} Error={9}", 
-                    UriString, Scheme, User, Password, Host, Port, Path, Query, Fragment, Error));
+                string desc = String.Format( "UriString={0} Scheme={1} User={2} Password={3} Host={4} Port={5} Path={6} Query={7} Fragment={8} Error={9}", 
+                    UriString, Scheme, User, Password, Host, Port, Path, Query, Fragment, Error);
+                return desc;
             }
+        }
+
+        // Both error strings should be empty or both populated - can't check equality because one is a human remark, the other generated in code
+        private bool IsErrorMatch( string s1, string s2 )
+        {
+            bool isMatch = (s1.Trim() == "" && s2.Trim() == "") || (s1.Trim() != "" && s2.Trim() != "");
+            return isMatch;
         }
 
         private void cmdTestCases_Click(object sender, EventArgs e)
         {
+            lstTestCaseErrors.Items.Clear();
+
             var testCases = new List<UriTestCase>();
             string line;
             StreamReader file = new StreamReader(@"uri-test-cases.txt");
-            var item = new UriTestCase();
+            int n = 0;
             while ((line = file.ReadLine()) != null)
             {
-                var fields = line.Split(new char[] { '\t' });
-                item.UriString = fields[0];
+                ++n;
+                // Skip header line
+                if (n == 1)
+                    continue;
+
+                var fields = line.Split(new char[] { '\t' }, StringSplitOptions.None );
+
+                var item = new UriTestCase();
+                item.UriString = fields[0].Trim();
                 item.Scheme = fields[1];
                 item.User = fields[2];
                 item.Password = fields[3];
@@ -74,28 +91,34 @@ namespace UriParser_Client
                 item.Query = fields[7];
                 item.Fragment = fields[8];
                 item.Error = fields[9];
+
                 testCases.Add(item);
-                item = new UriTestCase();
             }
 
             var uriParser = new UriParser.UriParser();
-            foreach (var x in testCases)
+            for (int i = 0; i < testCases.Count; ++i)
             {
+                var x = testCases[i];
                 uriParser.Parse(x.UriString);
+
                 string error = "";
-                if ( x.Scheme != uriParser.Scheme ) error += "Scheme ";
-                if ( x.User != uriParser.User ) error += "User ";
-                if ( x.Password != uriParser.Password ) error += "Password ";
-                if ( x.Host != uriParser.Host ) error += "Host ";
-                if ( x.Port != uriParser.Port ) error += "Port ";
-                if ( x.Path != uriParser.Path ) error += "Path ";
-                if ( x.Query != uriParser.Query ) error += "Query ";
-                if ( x.Fragment != uriParser.Fragment) error += "Fragment ";
-                // uriParser.Error;
+                if ( x.Scheme != uriParser.Scheme ) error += "Scheme.";
+                if ( x.User != uriParser.User ) error += "User.";
+                if ( x.Password != uriParser.Password ) error += "Password.";
+                if ( x.Host != uriParser.Host ) error += "Host.";
+                if ( x.Port != uriParser.Port ) error += "Port.";
+                if ( x.Path != uriParser.Path ) error += "Path.";
+                if ( x.Query != uriParser.Query ) error += "Query.";
+                if ( x.Fragment != uriParser.Fragment) error += "Fragment.";
+                if ( !IsErrorMatch(x.Error, uriParser.Error) ) error += "ErrorMismatch.";  // Error mismatch
                 if (error != "")
                 {
-                    Console.WriteLine("Error={0} Test case: {1}", error, x.ToString());
-                    Console.WriteLine("Actual: UriString={0} Scheme={1} User={2} Password={3} Host={4) Port={5} Path={6} Query={7} Fragment={8} Error={9}", x.UriString, uriParser.Scheme, uriParser.User, uriParser.Password, uriParser.Host, uriParser.Port, uriParser.Path, uriParser.Query, uriParser.Fragment, uriParser.Error);
+                    string expected = String.Format("Error={0} Expected: {1}", error, x.ToString());
+                    string actual = String.Format("\tActual: UriString={0} Scheme={1} User={2} Password={3} Host={4} Port={5} Path={6} Query={7} Fragment={8} Error={9}", x.UriString, uriParser.Scheme, uriParser.User, uriParser.Password, uriParser.Host, uriParser.Port, uriParser.Path, uriParser.Query, uriParser.Fragment, uriParser.Error);
+                    Console.WriteLine(expected);
+                    Console.WriteLine(actual);
+                    lstTestCaseErrors.Items.Add(expected);
+                    lstTestCaseErrors.Items.Add(actual);
                 }
             }
 

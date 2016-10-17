@@ -50,6 +50,7 @@
             this.label10 = new System.Windows.Forms.Label();
             this.txtError = new System.Windows.Forms.TextBox();
             this.cmdTestCases = new System.Windows.Forms.Button();
+            this.lstTestCaseErrors = new System.Windows.Forms.ListBox();
             this.SuspendLayout();
             // 
             // label1
@@ -212,20 +213,21 @@
             this.label10.AutoSize = true;
             this.label10.Location = new System.Drawing.Point(13, 195);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(29, 13);
+            this.label10.Size = new System.Drawing.Size(40, 13);
             this.label10.TabIndex = 0;
-            this.label10.Text = "Error";
+            this.label10.Text = "Error(s)";
             // 
             // txtError
             // 
             this.txtError.Location = new System.Drawing.Point(76, 192);
+            this.txtError.Multiline = true;
             this.txtError.Name = "txtError";
-            this.txtError.Size = new System.Drawing.Size(598, 20);
+            this.txtError.Size = new System.Drawing.Size(598, 73);
             this.txtError.TabIndex = 1;
             // 
             // cmdTestCases
             // 
-            this.cmdTestCases.Location = new System.Drawing.Point(704, 53);
+            this.cmdTestCases.Location = new System.Drawing.Point(16, 271);
             this.cmdTestCases.Name = "cmdTestCases";
             this.cmdTestCases.Size = new System.Drawing.Size(91, 25);
             this.cmdTestCases.TabIndex = 3;
@@ -233,11 +235,21 @@
             this.cmdTestCases.UseVisualStyleBackColor = true;
             this.cmdTestCases.Click += new System.EventHandler(this.cmdTestCases_Click);
             // 
+            // lstTestCaseErrors
+            // 
+            this.lstTestCaseErrors.FormattingEnabled = true;
+            this.lstTestCaseErrors.HorizontalScrollbar = true;
+            this.lstTestCaseErrors.Location = new System.Drawing.Point(16, 302);
+            this.lstTestCaseErrors.Name = "lstTestCaseErrors";
+            this.lstTestCaseErrors.Size = new System.Drawing.Size(779, 342);
+            this.lstTestCaseErrors.TabIndex = 4;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(842, 355);
+            this.ClientSize = new System.Drawing.Size(842, 656);
+            this.Controls.Add(this.lstTestCaseErrors);
             this.Controls.Add(this.cmdTestCases);
             this.Controls.Add(this.btnUriParse);
             this.Controls.Add(this.txtUser);
@@ -291,6 +303,7 @@
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.TextBox txtError;
         private System.Windows.Forms.Button cmdTestCases;
+        private System.Windows.Forms.ListBox lstTestCaseErrors;
     }
 }
 
