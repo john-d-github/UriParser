@@ -50,7 +50,67 @@ URI defined in RFC 3986 (Jan 2005).
 	Can be empty string - see RFC 3986 (2005) Section 4.1
 	Example of IPv6 host: "file://[fe80::203:baff:fe5a:749d%1]/Documents/file"
 
+
+Actually, a URI can be a URL or a URN
+>>>See http://www.freeformatter.com/url-parser-query-string-splitter.html
+
+	What's the syntax of a URI?
+
+		scheme:scheme-specific-part?query#fragment
+
+		Examples from the RFC:
+		ftp://ftp.is.co.za/rfc/rfc1808.txt
+		http://www.ietf.org/rfc/rfc2396.txt
+		ldap://[2001:db8::7]/c=GB?objectClass?one
+		news:comp.infosystems.www.servers.unix
+		tel:+1-816-555-1212
+		telnet://192.0.2.16:80/
+		urn:oasis:names:specification:docbook:dtd:xml:4.1.2
+		
+	What's the syntax of a URL?
+
+		scheme://username:password@subdomain.domain.tld:port/path/file-name.suffix?query-string#hash
+
+		Examples:
+		http://www.google.com
+		http://foo:bar@w1.superman.com/very/long/path.html?p1=v1&p2=v2#more-details
+		https://secured.com:443
+		ftp://ftp.bogus.com/~some/path/to/a/file.txt
+
+	What's the syntax of a URN?
+
+		urn:namespame-identifier:namespace-specific-string
+
+		Examples from Wikipedia:
+		urn:isbn:0451450523
+		urn:ietf:rfc:2648
+		urn:uuid:6e8bc430-9c3a-11d9-9669-0800200c9a66
+
+
+URN defined in RFC 2141 (May 1997), RFC 6963 (May 2013)
+>>>See https://tools.ietf.org/html/rfc2141 and https://tools.ietf.org/html/rfc6963
+
+	All URNs have the following syntax (phrases enclosed in quotes are REQUIRED):
+
+		<URN> ::= "urn:" <NID> ":" <NSS>
+
+	where <NID> is the Namespace Identifier, and <NSS> is the Namespace
+	Specific String.  The leading "urn:" sequence is case-insensitive.
+	The NID determines the _syntactic_ interpretation of the NSS (as discussed in [1]).
+
+	2.1 NID syntax - cannot contain ":" and "urn" is a reserved word
+	NID is case-insensitive. It can contain alphanumeric and "-"
+	Chars "." and "+" are also allowed in Berners-Lee, T., R. Fielding, L. Masinter, "Uniform Resource Locators (URL),"  Work in Progress.
+
+	2.2 NSS syntax - can include alphanumeric, variety of punctuation (see defn of <other> below)
+	Any char not in the valid list can be encoded as %xx where x is hex digit
+	Characters "/", "?", and "#" are RESERVED for future developments.
 	
+		<other>       ::= "(" | ")" | "+" | "," | "-" | "." |
+							 ":" | "=" | "@" | ";" | "$" |
+						 "_" | "!" | "*" | "'"
+	
+   
 class URI {
 	string Scheme;
 	string User; 
@@ -191,3 +251,15 @@ SUMMARY
 	See "Razor Risk FSM.xls" for the 2 versions of the state transition matrix, and for the test cases.
 	I copy-pasted the test cases into "UriParser_Client/uri-test-cases.txt" for ease of input.
 	
+URI PROJECTS ON GITHUB 
+
+	http://addressable.rubyforge.org/ = Ruby test cases
+	http://www.lookout.net/test/url/ = see urls-local.json
+	https://github.com/cweb/url-testing
+	https://github.com/stricaud/faup
+	http://greenbytes.de/tech/tc/uris/ = URI parsing/resolving tests (julian.reschke@gmx.de)
+	
+TODO
+	URI should handle URN and URL
+	What about Unicode characters, eg, Asian website?
+	Some URL test cases need resolving where actual & expected have discrepancy

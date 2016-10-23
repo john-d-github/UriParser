@@ -1,27 +1,36 @@
-UriString	Scheme	User	Password	Host	Port	Path 	Query	Fragment	Error
-foo:xyz	foo					xyz			
-http://example/x/y/z	http			example		x/y/z			
-http://example.com/	http			example.com					
-http://ex/x/y/z	http			ex		x/y/z			
-http://ex/x/y/	http			ex		x/y			
-file:/swap/test/animal.rdf  	file					/swap/test/animal.rdf			
-file:/e/x/y/z	file					/e/x/y/z			
-file:/ex/x/y/	file					/ex/x/y			
-file:/devel/WWW/2000/10/swap/test/reluri-1.n3 	file					/devel/WWW/2000/10/swap/test/reluri-1.n3			
-file:/home/connolly/w3ccvs/WWW/2000/10/swap/test/reluri-1.n3 	file					/home/connolly/w3ccvs/WWW/2000/10/swap/test/reluri-1.n3			
-file:/some/dir/#blort 	file					/some/dir		blort	
-file:/some/dir/# 	file					/some/dir			
-http://example/x/y%2Fz	http			example		x/y%2Fz			
-http://example/x%2Fy/z	http			example		x%2Fy/z			
-http://example/x/abc.efg	http			example		x/abc.efg			
-http://www.w3.org/People/Berners-Lee/card.rdf	http			www.w3.org		People/Berners-Lee/card.rdf			
-http://example.com/.meta.n3	http			example.com		.meta.n3			
-http://user:pass@www.example.com/path/path2?query=1	http	user	pass	www.example.com		path/path2	query=1		
-http://user@www.example.com/path/path2?query=1	http	user		www.example.com		path/path2	query=1		If specify user, must specify password
-http://user:pass@www.example.com:1234/path/path2?query=1	http	user	pass	www.example.com	1234	path/path2	query=1		
-http://foo.xyz/imageService?cmd=get&id=img000019293	http			foo.xyz		imageService	cmd=get&id=img000019293		
-mailto:fred@example.com	mailto					fred@example.com			
-foo://info.example.com?fred	foo			info.example.com			fred		
-foo://info.example.com?freddo?frog	foo			info.example.com			freddo		Specified more than one query
-ftp://anonymous:@public.server.com:22/public/data/file.txt	ftp	anonymous		public.server.com	22	public/data/file.txt			
-ftp://anon:anon@public.server.com:22:21/public/data/file.txt	ftp	anon	anon	public.server.com	22	public/data/file.txt			Specified two ports
+UriString	Scheme	User	Password	Host	Port	Path 	Query	Fragment	Error	Comment
+foo:xyz	foo					xyz				
+http://example/x/y/z	http			example		x/y/z				
+http://example.com/	http			example.com						
+http://ex/x/y/z	http			ex		x/y/z				
+http://ex/x/y/	http			ex		x/y				
+file:/swap/test/animal.rdf  	file					/swap/test/animal.rdf				
+file:/e/x/y/z	file					/e/x/y/z				
+file:/ex/x/y/	file					/ex/x/y				
+file:/devel/WWW/2000/10/swap/test/reluri-1.n3 	file					/devel/WWW/2000/10/swap/test/reluri-1.n3				
+file:/home/connolly/w3ccvs/WWW/2000/10/swap/test/reluri-1.n3 	file					/home/connolly/w3ccvs/WWW/2000/10/swap/test/reluri-1.n3				
+file:/some/dir/#blort 	file					/some/dir		blort		
+file:/some/dir/# 	file					/some/dir				
+http://example/x/y%2Fz	http			example		x/y%2Fz				
+http://example/x%2Fy/z	http			example		x%2Fy/z				
+http://example/x/abc.efg	http			example		x/abc.efg				
+http://www.w3.org/People/Berners-Lee/card.rdf	http			www.w3.org		People/Berners-Lee/card.rdf				
+http://example.com/.meta.n3	http			example.com		.meta.n3				
+http://user:pass@www.example.com/path/path2?query=1	http	user	pass	www.example.com		path/path2	query=1			
+http://user@www.example.com/path/path2?query=1	http	user		www.example.com		path/path2	query=1		If specify user, must specify password	
+http://user:pass@www.example.com:1234/path/path2?query=1	http	user	pass	www.example.com	1234	path/path2	query=1			
+http://foo.xyz/imageService?cmd=get&id=img000019293	http			foo.xyz		imageService	cmd=get&id=img000019293			
+mailto:fred@example.com	mailto					fred@example.com				
+foo://info.example.com?fred	foo			info.example.com			fred			
+foo://info.example.com?freddo?frog	foo			info.example.com			freddo		Specified more than one query	
+ftp://anonymous:@public.server.com:22/public/data/file.txt	ftp	anonymous		public.server.com	22	public/data/file.txt				
+ftp://anon:anon@public.server.com:22:21/public/data/file.txt	ftp	anon	anon	public.server.com	22	public/data/file.txt			Specified two ports	
+www.google.com				www.google.com					Must have a Scheme	
+file://[fe80::203:baff:fe5a:749d%1]/Documents/file	file			[fe80::203:baff:fe5a:749d%1]		/Documents/file				IPV6 host
+telnet://192.0.2.16:80/	telnet			192.0.2.16	80					
+foo\\bar.com									Must have a Scheme	
+username:password@foo\\bar.com:80									Must have a Scheme	
+file://c:\foo\bar	file					c:\foo\bar				Windows style path with backslash
+tel:+1-816-555-1212	tel			+1-816-555-1212					??? Why is this valid	
+ldap://[2001:db8::7]/c=GB?objectClass?one	ldap			[2001:db8::7]		c=GB	objectClass		Specified more than one query	
+news:comp.infosystems.www.servers.unix	news					comp.infosystems.www.servers.unix				

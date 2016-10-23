@@ -47,11 +47,12 @@ namespace UriParser_Client
             public string Query;
             public string Fragment;
             public string Error;
+            public string Comment;
 
             public override string ToString()
             {
-                string desc = String.Format( "UriString={0} Scheme={1} User={2} Password={3} Host={4} Port={5} Path={6} Query={7} Fragment={8} Error={9}", 
-                    UriString, Scheme, User, Password, Host, Port, Path, Query, Fragment, Error);
+                string desc = String.Format( "UriString={0} Scheme={1} User={2} Password={3} Host={4} Port={5} Path={6} Query={7} Fragment={8} Error={9} Comment={10}", 
+                    UriString, Scheme, User, Password, Host, Port, Path, Query, Fragment, Error, Comment);
                 return desc;
             }
         }
@@ -91,6 +92,7 @@ namespace UriParser_Client
                 item.Query = fields[7];
                 item.Fragment = fields[8];
                 item.Error = fields[9];
+                item.Comment = fields[10];
 
                 testCases.Add(item);
             }
@@ -114,7 +116,8 @@ namespace UriParser_Client
                 if (error != "")
                 {
                     string expected = String.Format("Error={0} Expected: {1}", error, x.ToString());
-                    string actual = String.Format("\tActual: UriString={0} Scheme={1} User={2} Password={3} Host={4} Port={5} Path={6} Query={7} Fragment={8} Error={9}", x.UriString, uriParser.Scheme, uriParser.User, uriParser.Password, uriParser.Host, uriParser.Port, uriParser.Path, uriParser.Query, uriParser.Fragment, uriParser.Error);
+                    string actual = String.Format("\tActual: UriString={0} Scheme={1} User={2} Password={3} Host={4} Port={5} Path={6} Query={7} Fragment={8} Error={9}", 
+                        x.UriString, uriParser.Scheme, uriParser.User, uriParser.Password, uriParser.Host, uriParser.Port, uriParser.Path, uriParser.Query, uriParser.Fragment, uriParser.Error);
                     Console.WriteLine(expected);
                     Console.WriteLine(actual);
                     lstTestCaseErrors.Items.Add(expected);
