@@ -251,7 +251,7 @@ SUMMARY
 	See "Razor Risk FSM.xls" for the 2 versions of the state transition matrix, and for the test cases.
 	I copy-pasted the test cases into "UriParser_Client/uri-test-cases.txt" for ease of input.
 	
-URI PROJECTS ON GITHUB 
+OTHER URI PROJECTS ON GITHUB 
 
 	http://addressable.rubyforge.org/ = Ruby test cases
 	http://www.lookout.net/test/url/ = see urls-local.json
@@ -259,7 +259,102 @@ URI PROJECTS ON GITHUB
 	https://github.com/stricaud/faup
 	http://greenbytes.de/tech/tc/uris/ = URI parsing/resolving tests (julian.reschke@gmx.de)
 	
-TODO
+TODO at 24-Oct-2016
+
 	URI should handle URN and URL
 	What about Unicode characters, eg, Asian website?
 	Some URL test cases need resolving where actual & expected have discrepancy
+	
+	
+25-Oct-2016
+***********
+
+Added command button "Copy to clipboard" to copy ListBox contents to clipboard as a string.
+This made it easier to analyse the test case results.
+
+Compare actual & expected behaviour for failing test cases
+
+	Error=User.Host.Path.Query. Expected: UriString=http://user@www.example.com/path/path2?query=1 Scheme=http User=user Password= Host=www.example.com Port= Path=path/path2 Query=query=1 Fragment= Error=If specify user, must specify password Comment=
+	UriParser sets User="" and Host=user and stops parsing 
+	Error=Parsing hostgroup - if you find '@' without having seen `:rhs`, you're missing password Bad parse at: @www.example.com/path/path2?query=1
+
+	Error=Path. Expected: UriString=ftp://anon:anon@public.server.com:22:21/public/data/file.txt Scheme=ftp User=anon Password=anon Host=public.server.com Port=22 Path=public/data/file.txt Query= Fragment= Error=Specified two ports Comment=
+	UriParser sets Port=22 but then stops parsing
+	Error=Parsing hostgroup - extra colon found in user:pass or host:port Bad parse at: :21/public/data/file.txt
+		
+	Error=Scheme.Host. Expected: UriString=www.google.com Scheme= User= Password= Host=www.google.com Port= Path= Query= Fragment= Error=Must have a Scheme Comment=
+	UriParser sets Scheme=www.google.com 
+	Error=Missing scheme (no colon found to terminate it)
+		
+	Error=Host.Port.Path.ErrorMismatch. Expected: UriString=file://[fe80::203:baff:fe5a:749d%1]/Documents/file Scheme=file User= Password= Host=[fe80::203:baff:fe5a:749d%1] Port= Path=/Documents/file Query= Fragment= Error= Comment=IPV6 host
+	UriParser mucks up Host - the colons in IPv6 address make it try for host:port logic Scheme=file User= Password= Host=[fe80 Port=:203 Path= Query= Fragment= Error=Parsing hostgroup - extra colon found in user:pass or host:port Bad parse at: :baff:fe5a:749d%1]/Documents/file
+		
+	Error=Scheme. Expected: UriString=foo\\bar.com Scheme= User= Password= Host= Port= Path= Query= Fragment= Error=Must have a Scheme Comment=
+	UriParser sets Scheme=foo\\bar.com whereas test case has everything blank
+	Error=Missing scheme (no colon found to terminate it)
+		
+	Error=Scheme.Path.ErrorMismatch. Expected: UriString=username:password@foo\\bar.com:80 Scheme= User= Password= Host= Port= Path= Query= Fragment= Error=Must have a Scheme Comment=
+	UriParser sets Scheme=username Path=password@foo\\bar.com:80 Query= Fragment= 
+	It doesn't give any error
+		
+	Error=Host.Port.Path. Expected: UriString=file://c:\foo\bar Scheme=file User= Password= Host= Port= Path=c:\foo\bar Query= Fragment= Error= Comment=Windows style path with backslash
+	UriParser sers Scheme=file Host=c Port=\foo\bar 
+	It doesn't give any error
+		
+	Error=Host.Path.ErrorMismatch. Expected: UriString=tel:+1-816-555-1212 Scheme=tel User= Password= Host=+1-816-555-1212 Port= Path= Query= Fragment= Error=??? Why is this valid Comment=
+	UriParser sets Scheme=tel Path=+1-816-555-1212 
+	It doesn't give any error
+		
+	Error=Host.Port.Path.Query. Expected: UriString=ldap://[2001:db8::7]/c=GB?objectClass?one Scheme=ldap User= Password= Host=[2001:db8::7] Port= Path=c=GB Query=objectClass Fragment= Error=Specified more than one query Comment=
+	UriParser sets Scheme=ldap Host=[2001 Port=db8 
+	Error=Parsing hostgroup - extra colon found in user:pass or host:port Bad parse at: ::7]/c=GB?objectClass?one
+
+UriParser - summary of errors
+
+	Discrepancies due to test case making sensible judgements on ill-formed URL, whereas UriParser stops parsing at error
+	
+		UriString=http://user@www.example.com/path/path2?query=1 
+		Both identify the error correctly (missing password)
+		The discrepancy is because UriParser stops parsing at the error whereas the test case tries to make sense of the string
+
+		UriString=ftp://anon:anon@public.server.com:22:21/public/data/file.txt 
+		Both identify the error correctly (specify 2 ports)
+		UriParser sets Port=22 but then stops parsing whereas the test case tries to make sense of the string
+			
+		UriString=www.google.com 
+		Both identify the error correctly (missing scheme)
+		UriParser sets Scheme=www.google.com but then detects the missing colon terminator & stops. The test case tries to populate each field sensibly.
+	
+		UriString=foo\\bar.com 
+		Both identify the error correctly (missing scheme)
+		UriParser sets Scheme=foo\\bar.com whereas test case has everything blank
+			
+		Error=Host.Path.ErrorMismatch. Expected: UriString=tel:+1-816-555-1212 Scheme=tel User= Password= Host=+1-816-555-1212 Port= Path= Query= Fragment= Error=??? Why is this valid Comment=
+		UriParser sets Scheme=tel Path=+1-816-555-1212 
+		It doesn't give any error
+			
+	Incorrect parsing
+	
+		UriString=file://[fe80::203:baff:fe5a:749d%1]/Documents/file
+		UriParser mucks up Host - the colons in IPv6 address make it try for host:port logic 
+		It incorrectly gives error "Error Parsing hostgroup - extra colon found in user:pass or host:port Bad parse at: :baff:fe5a:749d%1]/Documents/file"
+			
+		UriString=username:password@foo\\bar.com:80 
+		Test case gives error "Must have a Scheme"
+		UriParser sets Scheme=username Path=password@foo\\bar.com:80 Query= Fragment= 
+		But it doesn't give any error
+			
+		UriString=file://c:\foo\bar 	Comment=Windows style path with backslash
+		UriParser sers Scheme=file Host=c Port=\foo\bar 
+		It doesn't give any error
+			
+		UriString=ldap://[2001:db8::7]/c=GB?objectClass?one 
+		Test case error is about more than one query being specified.
+		UriParser sets Scheme=ldap Host=[2001 Port=db8 
+		Error=Parsing hostgroup - extra colon found in user:pass or host:port Bad parse at: ::7]/c=GB?objectClass?one
+		Like the IPv6 host parsing issue, the colons in hostname confuse it.
+
+	Summary 
+	- look for square brackets introducing IPv6 host address
+		if first char of Host is '[' then jump to new state IPv6 wh is terminated by ']'
+	- handle "file" spec with WIndows

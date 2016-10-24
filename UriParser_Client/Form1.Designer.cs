@@ -51,6 +51,7 @@
             this.txtError = new System.Windows.Forms.TextBox();
             this.cmdTestCases = new System.Windows.Forms.Button();
             this.lstTestCaseErrors = new System.Windows.Forms.ListBox();
+            this.cmdCopyClipboard = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -244,11 +245,22 @@
             this.lstTestCaseErrors.Size = new System.Drawing.Size(779, 342);
             this.lstTestCaseErrors.TabIndex = 4;
             // 
+            // cmdCopyClipboard
+            // 
+            this.cmdCopyClipboard.Location = new System.Drawing.Point(694, 273);
+            this.cmdCopyClipboard.Name = "cmdCopyClipboard";
+            this.cmdCopyClipboard.Size = new System.Drawing.Size(100, 23);
+            this.cmdCopyClipboard.TabIndex = 5;
+            this.cmdCopyClipboard.Text = "Copy to clipboard";
+            this.cmdCopyClipboard.UseVisualStyleBackColor = true;
+            this.cmdCopyClipboard.Click += new System.EventHandler(this.cmdCopyClipboard_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(842, 656);
+            this.Controls.Add(this.cmdCopyClipboard);
             this.Controls.Add(this.lstTestCaseErrors);
             this.Controls.Add(this.cmdTestCases);
             this.Controls.Add(this.btnUriParse);
@@ -304,6 +316,7 @@
         private System.Windows.Forms.TextBox txtError;
         private System.Windows.Forms.Button cmdTestCases;
         private System.Windows.Forms.ListBox lstTestCaseErrors;
+        private System.Windows.Forms.Button cmdCopyClipboard;
     }
 }
 

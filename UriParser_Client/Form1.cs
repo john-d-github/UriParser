@@ -126,5 +126,10 @@ namespace UriParser_Client
             }
 
         }
+
+        private void cmdCopyClipboard_Click(object sender, EventArgs e)
+        {
+            Utils.CopyListBox(lstTestCaseErrors, this); // copy contents to Windows clipboard
+        }
     }
 }
