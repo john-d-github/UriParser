@@ -383,4 +383,6 @@ IPv6 parsing
 	- Ok now
 - I've been a bit suspicious about UriString=tel:+1-816-555-1212
 	- It was flagged as error in test cases, but it is syntactically valid => remove error on test case
+- At this point, did a push to https://github.com/john-d-github/UriParser
+
 
