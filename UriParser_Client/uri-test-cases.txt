@@ -26,11 +26,12 @@ foo://info.example.com?freddo?frog	foo			info.example.com			freddo		Specified mo
 ftp://anonymous:@public.server.com:22/public/data/file.txt	ftp	anonymous		public.server.com	22	public/data/file.txt				
 ftp://anon:anon@public.server.com:22:21/public/data/file.txt	ftp	anon	anon	public.server.com	22	public/data/file.txt			Specified two ports	
 www.google.com				www.google.com					Must have a Scheme	
-file://[fe80::203:baff:fe5a:749d%1]/Documents/file	file			[fe80::203:baff:fe5a:749d%1]		/Documents/file				IPV6 host
+file://[fe80::203:baff:fe5a:749d%1]/Documents/file	file			[fe80::203:baff:fe5a:749d%1]		Documents/file				IPV6 host
 telnet://192.0.2.16:80/	telnet			192.0.2.16	80					
 foo\\bar.com									Must have a Scheme	
 username:password@foo\\bar.com:80									Must have a Scheme	
 file://c:\foo\bar	file					c:\foo\bar				Windows style path with backslash
-tel:+1-816-555-1212	tel			+1-816-555-1212					??? Why is this valid	
+tel:+1-816-555-1212	tel					+1-816-555-1212				
 ldap://[2001:db8::7]/c=GB?objectClass?one	ldap			[2001:db8::7]		c=GB	objectClass		Specified more than one query	
 news:comp.infosystems.www.servers.unix	news					comp.infosystems.www.servers.unix				
+ldap://[2001:db8::7]:8080/c=GB?objectClass#Intro	ldap			[2001:db8::7]	8080	c=GB	objectClass	Intro		IPv6 addr + port

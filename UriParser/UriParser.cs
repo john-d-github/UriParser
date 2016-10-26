@@ -28,13 +28,17 @@ namespace UriParser
         error1 = 14,
         error2 = 15,
         error3 = 16,
-        pathTok = 17,
-        queryTok = 18,
-        fragTok = 19,
-        hostTok = 20,
-        rhsTok = 21,
-        portTok = 22,
-        endState = 23
+        error4 = 17,
+        pathTok = 18,
+        queryTok = 19,
+        fragTok = 20,
+        hostTok = 21,
+        rhsTok = 22,
+        portTok = 23,
+        ipv6Tok = 24,
+        ipv6 = 25,
+        end_ipv6 = 26,
+        endState = 27
     }
 
     // No longer used
@@ -77,7 +81,7 @@ namespace UriParser
 
         private int[] fCalcCondition(char c)
         {
-            var condition = new int[15];
+            var condition = new int[20];
             if (c == ':') condition[1] = 1;
             if (c != ':') condition[2] = 1;
             if (c == '/') condition[3] = 1;
@@ -90,8 +94,13 @@ namespace UriParser
             if (c != '@' && c != ':' && c != '/') condition[10] = 1;
             if (c != '\0') condition[11] = 1;
             if (c == '\0') condition[12] = 1;
-            if (c != ':' && c != '?') condition[13] = 1;
+            if (c != ':' && c != '?' && c != '/') condition[13] = 1;
             if (c != '/' && c != '?') condition[14] = 1;
+            if (c == '[') condition[15] = 1;
+            if (c != '[') condition[16] = 1;
+            if (c == ']') condition[17] = 1;
+            if (c != ']') condition[18] = 1;
+            if (c != '/' && c != '[') condition[19] = 1;
             return condition;
         }
 
@@ -120,7 +129,7 @@ namespace UriParser
             SetCond(t, States.path, new int[,] { { 5, (int)States.queryTok }, { 6, (int)States.path }, { 7, (int)States.fragTok }, { 12, (int)States.final } });
             SetCond(t, States.query, new int[,] { { 5, (int)States.error3 }, { 7, (int)States.fragTok }, { 8, (int)States.query }, { 12, (int)States.final } });
             SetCond(t, States.fragment, new int[,] { { 8, (int)States.fragment }, { 12, (int)States.final } });
-            SetCond(t, States.hostgroup, new int[,] { { 3, (int)States.path }, { 4, (int)States.lhs }, { 12, (int)States.final } });
+            SetCond(t, States.hostgroup, new int[,] { { 3, (int)States.path }, { 15, (int)States.ipv6Tok }, { 19, (int)States.lhs }, { 12, (int)States.final } });
             SetCond(t, States.lhs, new int[,] { { 1, (int)States.rhsTok }, { 3, (int)States.pathTok }, { 5, (int)States.queryTok }, { 9, (int)States.error1 }, { 10, (int)States.lhs }, { 12, (int)States.final } });
             SetCond(t, States.rhs, new int[,] { { 1, (int)States.error2 }, { 3, (int)States.pathTok }, { 5, (int)States.queryTok }, { 9, (int)States.hostTok }, { 10, (int)States.rhs }, { 12, (int)States.final } });
             SetCond(t, States.host, new int[,] { { 1, (int)States.portTok }, { 3, (int)States.pathTok }, { 5, (int)States.queryTok }, { 13, (int)States.host }, { 12, (int)States.final } });
@@ -131,9 +140,12 @@ namespace UriParser
             SetCond(t, States.pathTok, new int[,] { { 11, (int)States.path }, { 12, (int)States.final } });
             SetCond(t, States.queryTok, new int[,] { { 5, (int)States.error3 }, { 11, (int)States.query }, { 12, (int)States.final } });
             SetCond(t, States.fragTok, new int[,] { { 11, (int)States.fragment }, { 12, (int)States.final } });
-            SetCond(t, States.hostTok, new int[,] { { 11, (int)States.host }, { 12, (int)States.final } });
+            SetCond(t, States.hostTok, new int[,] { { 16, (int)States.host }, { 12, (int)States.final } });
             SetCond(t, States.rhsTok, new int[,] { { 9, (int)States.hostTok }, { 11, (int)States.rhs }, { 12, (int)States.final } });
             SetCond(t, States.portTok, new int[,] { { 1, (int)States.error2 }, { 11, (int)States.port }, { 12, (int)States.final } });
+            SetCond(t, States.ipv6Tok, new int[,] { { 11, (int)States.ipv6 }, { 12, (int)States.final } });
+            SetCond(t, States.ipv6, new int[,] { { 17, (int)States.end_ipv6 }, { 18, (int)States.ipv6 }, { 12, (int)States.final } });
+            SetCond(t, States.end_ipv6, new int[,] { { 1, (int)States.portTok }, { 3, (int)States.pathTok }, { 5, (int)States.queryTok }, { 13, (int)States.error4 }, { 12, (int)States.final } });
 
             var stateValue = new string[t.GetLength(0)];
 
@@ -167,7 +179,15 @@ namespace UriParser
             string host = fsm_.StateValue((int)States.host);
             string lhs = fsm_.StateValue((int)States.lhs);
             string rhs = fsm_.StateValue((int)States.rhs);
-            if (host == "")
+            string ipv6 = fsm_.StateValue((int)States.ipv6);
+            if (host == "" && ipv6 != "")
+            {
+                Host = "[" + ipv6 + "]";    // we parsed off the '[' and ']' when identifying the ipv6 address, put them back on
+                Port = fsm_.StateValue((int)States.port);
+                User = lhs;
+                Password = rhs;
+            }
+            else if (host == "")
             {
                 Host = lhs;
                 Port = rhs;
@@ -195,15 +215,19 @@ namespace UriParser
             string error1Explain = "Parsing hostgroup - if you find '@' without having seen `:rhs`, you're missing password";
             string error2Explain = "Parsing hostgroup - extra colon found in user:pass or host:port";
             string error3Explain = "Parsing query - extra '?' found";
+            string error4Explain = "Parsing query - port, path or query must follow host";
             string error1 = fsm_.StateValue((int)States.error1);
             string error2 = fsm_.StateValue((int)States.error2);
             string error3 = fsm_.StateValue((int)States.error3);
+            string error4 = fsm_.StateValue((int)States.error4);
             if (error1 != "")
                 Error += error1Explain + " Bad parse at: " + error1;
             if (error2 != "")
                 Error += (Error == "" ? "" : "\n") + error2Explain + " Bad parse at: " + error2;
             if (error3 != "")
                 Error += (Error == "" ? "" : "\n") + error3Explain + " Bad parse at: " + error3;
+            if (error4 != "")
+                Error += (Error == "" ? "" : "\n") + error4Explain + " Bad parse at: " + error4;
 
             // If no ':' was found following Scheme, then what was parsed into Scheme is not valid - it's probably the host.
             // Add this to error list

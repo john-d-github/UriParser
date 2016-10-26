@@ -266,6 +266,7 @@ TODO at 24-Oct-2016
 	Some URL test cases need resolving where actual & expected have discrepancy
 	
 	
+	
 25-Oct-2016
 ***********
 
@@ -357,4 +358,29 @@ UriParser - summary of errors
 	Summary 
 	- look for square brackets introducing IPv6 host address
 		if first char of Host is '[' then jump to new state IPv6 wh is terminated by ']'
-	- handle "file" spec with WIndows
+	- handle "file" spec with Windows path names
+	
+	
+27-Oct-2016
+***********
+
+IPv6 parsing
+- New states to detect start & end of IPv6 address ('[' and ']')
+- Initial test run seems to have missed the [ in case 'ldap://[2001:db8::7]/c=GB?objectClass?one'
+	- States should be scheme -> slash1 -> slash2 -> hostgroup -> ipv6
+	- Problem: it's going to lhs if 'not/'. This condition should be 'not/['
+	- Problem: it's still not picking up ipv6. I had transition to ipv6Tok in hostTok - should be in hostgroup.
+	- Better now; we parsed off the [] from ipv6, put it back on when assigning host.
+- Now failing on case UriString=file://[fe80::203:baff:fe5a:749d%1]/Documents/file
+	- Not picking up path correctly
+	- The difference is Documents/file versus expected /Documents/file
+	- This is a confusion of mine as to the rule of relative versus absolute path
+	- Relative path seems only to apply if there is no host specified; host => path always absolute
+- Added test case with ipv6 address and a port
+	- Gets ipv6 but not port
+	- State transition should be: ipv6 -> ']' -> end_ipv6 -> ':' -> portTok
+	- States captured ok but final assignment to UriParser member vbles was missing
+	- Ok now
+- I've been a bit suspicious about UriString=tel:+1-816-555-1212
+	- It was flagged as error in test cases, but it is syntactically valid => remove error on test case
+
