@@ -384,5 +384,17 @@ IPv6 parsing
 - I've been a bit suspicious about UriString=tel:+1-816-555-1212
 	- It was flagged as error in test cases, but it is syntactically valid => remove error on test case
 - At this point, did a push to https://github.com/john-d-github/UriParser
+	
+	
+31-Oct-2016
+***********
 
+Added chinese-character websites to test cases
+Now have url-test-cases.txt and urn-test-cases.txt
+Added UrnParser
+- Problem with States.error2 (missing NSS) - the state is entered, but no chars written into it.
+	It is only detected when still in state States.nid and EOS is reached
+	Note that '\0' is the dummy EOS char but that is never. appended to a state
+	Therefore, error2 is empty and so it is not detected
+	Not sure of the best way to handle this
 

@@ -1,0 +1,10 @@
+UriString	Scheme	NID (Namespace ID)	NSS (Namespace specific string)	Error	Comment
+urn:oasis:names:specification:docbook:dtd:xml:4.1.2	urn	oasis	names:specification:docbook:dtd:xml:4.1.2		
+urn:isbn:0451450523	urn	isbn	0451450523		
+urn:ietf:rfc:2648	urn	ietf	rfc:2648		
+urn:uuid:6e8bc430-9c3a-11d9-9669-0800200c9a66	urn	uuid	6e8bc430-9c3a-11d9-9669-0800200c9a66		
+urn:urn:abcd	urn	urn	abcd	"urn" is reserved word => invalid NID	
+urn:&123:	urn	&123			
+urn:&123:456	urn	&123	456		
+urn:abcd	urn	abcd		NSS missing	
+tel:+1-816-555-1212	tel	+1-816-555-1212		Scheme must be "urn:"	

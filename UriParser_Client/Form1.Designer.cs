@@ -49,9 +49,14 @@
             this.txtFragment = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
             this.txtError = new System.Windows.Forms.TextBox();
-            this.cmdTestCases = new System.Windows.Forms.Button();
+            this.cmdUrlTestCases = new System.Windows.Forms.Button();
             this.lstTestCaseErrors = new System.Windows.Forms.ListBox();
             this.cmdCopyClipboard = new System.Windows.Forms.Button();
+            this.label11 = new System.Windows.Forms.Label();
+            this.txtNid = new System.Windows.Forms.TextBox();
+            this.label12 = new System.Windows.Forms.Label();
+            this.txtNss = new System.Windows.Forms.TextBox();
+            this.cmdUrnTestCases = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -72,7 +77,7 @@
             // 
             // btnUriParse
             // 
-            this.btnUriParse.Location = new System.Drawing.Point(704, 13);
+            this.btnUriParse.Location = new System.Drawing.Point(694, 7);
             this.btnUriParse.Margin = new System.Windows.Forms.Padding(0);
             this.btnUriParse.Name = "btnUriParse";
             this.btnUriParse.Size = new System.Drawing.Size(64, 25);
@@ -226,15 +231,15 @@
             this.txtError.Size = new System.Drawing.Size(598, 73);
             this.txtError.TabIndex = 1;
             // 
-            // cmdTestCases
+            // cmdUrlTestCases
             // 
-            this.cmdTestCases.Location = new System.Drawing.Point(16, 271);
-            this.cmdTestCases.Name = "cmdTestCases";
-            this.cmdTestCases.Size = new System.Drawing.Size(91, 25);
-            this.cmdTestCases.TabIndex = 3;
-            this.cmdTestCases.Text = "Run test cases";
-            this.cmdTestCases.UseVisualStyleBackColor = true;
-            this.cmdTestCases.Click += new System.EventHandler(this.cmdTestCases_Click);
+            this.cmdUrlTestCases.Location = new System.Drawing.Point(16, 271);
+            this.cmdUrlTestCases.Name = "cmdUrlTestCases";
+            this.cmdUrlTestCases.Size = new System.Drawing.Size(91, 25);
+            this.cmdUrlTestCases.TabIndex = 3;
+            this.cmdUrlTestCases.Text = "Run URL test cases";
+            this.cmdUrlTestCases.UseVisualStyleBackColor = true;
+            this.cmdUrlTestCases.Click += new System.EventHandler(this.cmdUrlTestCases_Click);
             // 
             // lstTestCaseErrors
             // 
@@ -255,6 +260,48 @@
             this.cmdCopyClipboard.UseVisualStyleBackColor = true;
             this.cmdCopyClipboard.Click += new System.EventHandler(this.cmdCopyClipboard_Click);
             // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(539, 42);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(26, 13);
+            this.label11.TabIndex = 0;
+            this.label11.Text = "NID";
+            // 
+            // txtNid
+            // 
+            this.txtNid.Location = new System.Drawing.Point(602, 39);
+            this.txtNid.Name = "txtNid";
+            this.txtNid.Size = new System.Drawing.Size(213, 20);
+            this.txtNid.TabIndex = 1;
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(539, 72);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(29, 13);
+            this.label12.TabIndex = 0;
+            this.label12.Text = "NSS";
+            // 
+            // txtNss
+            // 
+            this.txtNss.Location = new System.Drawing.Point(602, 69);
+            this.txtNss.Name = "txtNss";
+            this.txtNss.Size = new System.Drawing.Size(213, 20);
+            this.txtNss.TabIndex = 1;
+            // 
+            // cmdUrnTestCases
+            // 
+            this.cmdUrnTestCases.Location = new System.Drawing.Point(122, 271);
+            this.cmdUrnTestCases.Name = "cmdUrnTestCases";
+            this.cmdUrnTestCases.Size = new System.Drawing.Size(91, 25);
+            this.cmdUrnTestCases.TabIndex = 3;
+            this.cmdUrnTestCases.Text = "Run URN test cases";
+            this.cmdUrnTestCases.UseVisualStyleBackColor = true;
+            this.cmdUrnTestCases.Click += new System.EventHandler(this.cmdUrnTestCases_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -262,7 +309,8 @@
             this.ClientSize = new System.Drawing.Size(842, 656);
             this.Controls.Add(this.cmdCopyClipboard);
             this.Controls.Add(this.lstTestCaseErrors);
-            this.Controls.Add(this.cmdTestCases);
+            this.Controls.Add(this.cmdUrnTestCases);
+            this.Controls.Add(this.cmdUrlTestCases);
             this.Controls.Add(this.btnUriParse);
             this.Controls.Add(this.txtUser);
             this.Controls.Add(this.label4);
@@ -278,6 +326,10 @@
             this.Controls.Add(this.label6);
             this.Controls.Add(this.txtHost);
             this.Controls.Add(this.label5);
+            this.Controls.Add(this.txtNss);
+            this.Controls.Add(this.txtNid);
+            this.Controls.Add(this.label12);
+            this.Controls.Add(this.label11);
             this.Controls.Add(this.txtPassword);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.txtScheme);
@@ -314,9 +366,14 @@
         private System.Windows.Forms.TextBox txtFragment;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.TextBox txtError;
-        private System.Windows.Forms.Button cmdTestCases;
+        private System.Windows.Forms.Button cmdUrlTestCases;
         private System.Windows.Forms.ListBox lstTestCaseErrors;
         private System.Windows.Forms.Button cmdCopyClipboard;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.TextBox txtNid;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.TextBox txtNss;
+        private System.Windows.Forms.Button cmdUrnTestCases;
     }
 }
 

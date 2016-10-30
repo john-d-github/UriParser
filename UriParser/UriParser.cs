@@ -6,53 +6,6 @@ using System.Threading.Tasks;
 
 namespace UriParser
 {
-    // beginState and endState are dummy states - endState represents the max enum value + 1
-    // used to size an array of states
-
-    enum States
-    {
-        beginState = 0,
-        initial = 1,
-        scheme = 2,
-        slash1 = 3,
-        slash2 = 4,
-        path = 5,
-        query = 6,
-        fragment = 7,
-        final = 8,
-        hostgroup = 9,
-        lhs = 10,
-        rhs = 11,
-        host = 12,
-        port = 13,
-        error1 = 14,
-        error2 = 15,
-        error3 = 16,
-        error4 = 17,
-        pathTok = 18,
-        queryTok = 19,
-        fragTok = 20,
-        hostTok = 21,
-        rhsTok = 22,
-        portTok = 23,
-        ipv6Tok = 24,
-        ipv6 = 25,
-        end_ipv6 = 26,
-        endState = 27
-    }
-
-    // No longer used
-    struct CondState
-    {
-        public int cond;
-        public States state;
-        public CondState( int cond, States state )
-        {
-            this.cond = cond;
-            this.state = state;
-        }
-    }
-
     /** 
         Parse a URI into its components, as defined below
       
@@ -63,6 +16,78 @@ namespace UriParser
 
     public class UriParser
     {
+        // beginState and endState are dummy states - endState represents the max enum value + 1
+        // used to size an array of states
+
+        enum States
+        {
+            beginState = 0,
+            initial = 1,
+            scheme = 2,
+            slash1 = 3,
+            slash2 = 4,
+            path = 5,
+            query = 6,
+            fragment = 7,
+            final = 8,
+            hostgroup = 9,
+            lhs = 10,
+            rhs = 11,
+            host = 12,
+            port = 13,
+            error1 = 14,
+            error2 = 15,
+            error3 = 16,
+            error4 = 17,
+            pathTok = 18,
+            queryTok = 19,
+            fragTok = 20,
+            hostTok = 21,
+            rhsTok = 22,
+            portTok = 23,
+            ipv6Tok = 24,
+            ipv6 = 25,
+            end_ipv6 = 26,
+            endState = 27
+        }
+
+        enum Conds
+        {
+            beginCond = 0,
+            colon = 1,
+            notColon = 2,
+            slash = 3,
+            notSlash = 4,
+            query = 5,
+            notQueryHash = 6,
+            hash = 7,
+            notHash = 8,
+            at = 9,
+            notAtColonSlash = 10,
+            notEOS = 11,
+            EOS = 12,
+            notColonQuerySlash = 13,
+            notSlashQuery = 14,
+            sqbr_left = 15,
+            notSqbr_left = 16,
+            sqbr_right = 17,
+            notSqbr_right = 18,
+            notSlashSqbr_left = 19,
+            endCond = 20
+        }
+
+        // No longer used
+        struct CondState
+        {
+            public int cond;
+            public States state;
+            public CondState(int cond, States state)
+            {
+                this.cond = cond;
+                this.state = state;
+            }
+        }
+
         private Fsm fsm_;
 
         // External callers can read these properties but not update them
@@ -81,26 +106,26 @@ namespace UriParser
 
         private int[] fCalcCondition(char c)
         {
-            var condition = new int[20];
-            if (c == ':') condition[1] = 1;
-            if (c != ':') condition[2] = 1;
-            if (c == '/') condition[3] = 1;
-            if (c != '/') condition[4] = 1;
-            if (c == '?') condition[5] = 1;
-            if (c != '?' && c != '#') condition[6] = 1;
-            if (c == '#') condition[7] = 1;
-            if (c != '#') condition[8] = 1;
-            if (c == '@') condition[9] = 1;
-            if (c != '@' && c != ':' && c != '/') condition[10] = 1;
-            if (c != '\0') condition[11] = 1;
-            if (c == '\0') condition[12] = 1;
-            if (c != ':' && c != '?' && c != '/') condition[13] = 1;
-            if (c != '/' && c != '?') condition[14] = 1;
-            if (c == '[') condition[15] = 1;
-            if (c != '[') condition[16] = 1;
-            if (c == ']') condition[17] = 1;
-            if (c != ']') condition[18] = 1;
-            if (c != '/' && c != '[') condition[19] = 1;
+            var condition = new int[(int)Conds.endCond];
+            if (c == ':') condition[(int)Conds.colon] = 1;
+            if (c != ':') condition[(int)Conds.notColon] = 1;
+            if (c == '/') condition[(int)Conds.slash] = 1;
+            if (c != '/') condition[(int)Conds.notSlash] = 1;
+            if (c == '?') condition[(int)Conds.query] = 1;
+            if (c != '?' && c != '#') condition[(int)Conds.notQueryHash] = 1;
+            if (c == '#') condition[(int)Conds.hash] = 1;
+            if (c != '#') condition[(int)Conds.notHash] = 1;
+            if (c == '@') condition[(int)Conds.at] = 1;
+            if (c != '@' && c != ':' && c != '/') condition[(int)Conds.notAtColonSlash] = 1;
+            if (c != '\0') condition[(int)Conds.notEOS] = 1;
+            if (c == '\0') condition[(int)Conds.EOS] = 1;
+            if (c != ':' && c != '?' && c != '/') condition[(int)Conds.notColonQuerySlash] = 1;
+            if (c != '/' && c != '?') condition[(int)Conds.notSlashQuery] = 1;
+            if (c == '[') condition[(int)Conds.sqbr_left] = 1;
+            if (c != '[') condition[(int)Conds.notSqbr_left] = 1;
+            if (c == ']') condition[(int)Conds.sqbr_right] = 1;
+            if (c != ']') condition[(int)Conds.notSqbr_right] = 1;
+            if (c != '/' && c != '[') condition[(int)Conds.notSlashSqbr_left] = 1;
             return condition;
         }
 
@@ -117,7 +142,7 @@ namespace UriParser
         {
             int stateLen = (int)States.endState;                // Needed for 1st dimension of transition matrix (states)
             int condLen = fCalcCondition(' ').Length;           // Needed for 2nd dimension of transition matrix (conditions)
-            var t = new int[stateLen, condLen];                 // default initilized to 0
+            var t = new int[stateLen, condLen];                 // default initialized to 0
 
             // (int)enum has a bit of a code smell. You could wrap (int,enum) pairs in a struct & pass an array of that struct. 
             // But this obscures the information you're trying to make clearer with `new struct(int,enum)` clutter.
@@ -201,6 +226,9 @@ namespace UriParser
                 User = lhs;
                 Password = rhs;
             }
+
+            // Post corrections - it's cleaner here to have a first-pass parse
+            // and then have a second pass to tidy up afterwards, rather than trying to do everything in one pass
 
             // Any trailing spaces or '/' can be removed 
             Path = fsm_.StateValue((int)States.path).TrimEnd( new char[] { ' ', '/' } );
